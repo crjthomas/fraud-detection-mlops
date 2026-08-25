@@ -1,0 +1,38 @@
+bundle:
+  name: fraud_analytics_bundle
+
+include:
+  - resources/*.yml
+
+artifacts:
+  default:
+    type: whl
+    path: .
+    build: python -m pip wheel . -w dist --no-deps
+    dynamic_version: true
+
+variables:
+  catalog:
+    description: "Catalog for the fraud analytics bundle"
+    default: main
+  schema:
+    description: "Schema for the fraud analytics bundle"
+    default: fraud_dev
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-66d91581-9d84.cloud.databricks.com
+      root_path: /Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-66d91581-9d84.cloud.databricks.com
+      root_path: /Shared/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      schema: fraud_proud
+    permissions:
+      - level: CAN_MANAGE
+        group_name: data_engineers
