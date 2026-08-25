@@ -1,0 +1,34 @@
+resources:
+  jobs:
+    ml_fraud_pipeline:
+      name: "[${bundle.target}] Fraud Detection - MLOps Workflow"
+
+      job_clusters:
+        - job_cluster_key: ml_compute
+          new_cluster:
+            spark_version: 14.3.x-mllib-scala2.12
+            node_type_id: i3.xlarge
+            num_workers: 1
+
+      tasks:
+        - task_key: model_training
+          job_cluster_key: ml_compute
+          libraries:
+            - whl: ../dist/*.whl
+          notebook_task:
+            notebook_path: ../src/notebooks/03_train_model.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+
+        - task_key: batch_inference
+          depends_on:
+            - task_key: model_training
+          job_cluster_key: ml_compute
+          libraries:
+            - whl: ../dist/*.whl
+          notebook_task:
+            notebook_path: ../src/notebooks/04_batch_inference.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
