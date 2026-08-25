@@ -14,7 +14,7 @@ artifacts:
 variables:
   catalog:
     description: "Catalog for the fraud analytics bundle"
-    default: main
+    default: pyspark_hands_on
   schema:
     description: "Schema for the fraud analytics bundle"
     default: fraud_dev
