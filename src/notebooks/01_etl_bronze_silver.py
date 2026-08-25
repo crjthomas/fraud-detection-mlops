@@ -1,7 +1,7 @@
 # Databricks notebook source
 from databricks.sdk.runtime import dbutils
 
-dbutils.widgets.text("catalog", "main")
+dbutils.widgets.text("catalog", "pyspark_hands_on")
 dbutils.widgets.text("schema", "fraud_dev")
 
 catalog = dbutils.widgets.get("catalog")
